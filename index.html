@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>חישובים שוטפים</title>
+  <style>
+    body { font-family: Arial, sans-serif; direction: rtl; padding: 20px; background: #f4f4f4; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input[type="number"] { width: 100%; padding: 8px; margin: 5px 0; }
+    button { padding: 10px 15px; margin-top: 10px; cursor: pointer; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>חישובים שוטפים</h2>
+
+    <div id="viewMode">
+      <p>ערך 1: <span id="value1Display">0</span></p>
+      <p>ערך 2: <span id="value2Display">0</span></p>
+      <p>תוצאה: <span id="resultDisplay">0</span></p>
+      <button onclick="toggleEditMode()">כניסה למילוי פרטים</button>
+    </div>
+
+    <div id="loginSection" class="hidden">
+      <p>סיסמה: <input type="password" id="passwordInput"></p>
+      <button onclick="checkPassword()">אישור</button>
+      <p id="loginError" style="color:red;"></p>
+    </div>
+
+    <div id="editMode" class="hidden">
+      <label>ערך 1:</label>
+      <input type="number" id="value1" />
+
+      <label>ערך 2:</label>
+      <input type="number" id="value2" />
+
+      <button onclick="calculateAndSave()">חשב ושמור</button>
+      <button onclick="exitEditMode()">סיום</button>
+    </div>
+  </div>
+
+  <script>
+    const PASSWORD = "Ran187";
+
+    function toggleEditMode() {
+      document.getElementById('viewMode').classList.add('hidden');
+      document.getElementById('loginSection').classList.remove('hidden');
+    }
+
+    function checkPassword() {
+      const entered = document.getElementById('passwordInput').value;
+      if (entered === PASSWORD) {
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('editMode').classList.remove('hidden');
+
+        document.getElementById('value1').value = localStorage.getItem('value1') || 0;
+        document.getElementById('value2').value = localStorage.getItem('value2') || 0;
+      } else {
+        document.getElementById('loginError').textContent = 'סיסמה שגויה';
+      }
+    }
+
+    function calculateAndSave() {
+      const val1 = parseFloat(document.getElementById('value1').value) || 0;
+      const val2 = parseFloat(document.getElementById('value2').value) || 0;
+      const result = val1 + val2;
+
+      localStorage.setItem('value1', val1);
+      localStorage.setItem('value2', val2);
+      localStorage.setItem('result', result);
+
+      updateView();
+      alert('הנתונים נשמרו');
+    }
+
+    function exitEditMode() {
+      document.getElementById('editMode').classList.add('hidden');
+      document.getElementById('viewMode').classList.remove('hidden');
+    }
+
+    function updateView() {
+      document.getElementById('value1Display').textContent = localStorage.getItem('value1') || 0;
+      document.getElementById('value2Display').textContent = localStorage.getItem('value2') || 0;
+      document.getElementById('resultDisplay').textContent = localStorage.getItem('result') || 0;
+    }
+
+    updateView();
+  </script>
+</body>
+</html>
